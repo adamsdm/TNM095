@@ -4,6 +4,11 @@ from bot import Bot
 from food import Food
 from Snake import Snake
 
+RIGHT = 0
+UP = 1
+LEFT = 2
+DOWN = 3
+
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 12)
 
@@ -43,29 +48,41 @@ gameShouldClose = False
 
 init()
 while not gameShouldClose:
-    print("start")
-    bot.act()
+    
+    botAction = bot.act()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
-        # Handle movement
+        ## Handle movement
         
-        if event.type == pygame.KEYDOWN and (event.key == pygame.K_UP):
-            if snake.speed != [0, 1]:
-                snake.speed = [0, -1]
-                break
-        elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN):
-            if snake.speed != [0, -1]:
-                snake.speed = [0, 1]
-                break
-        elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT):
-            if snake.speed != [1, 0]:
-                snake.speed = [-1, 0]
-                break
-        elif event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT):
-            if snake.speed != [-1, 0]:
-                snake.speed = [1, 0]
-                break
+        #if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
+            #if snake.speed != [0, 1]:
+                #snake.speed = [0, -1]
+                #break
+        #elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
+            #if snake.speed != [0, -1]:
+                #snake.speed = [0, 1]
+                #break
+        #elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
+            #if snake.speed != [1, 0]:
+                #snake.speed = [-1, 0]
+                #break
+        #elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
+            #if snake.speed != [-1, 0]:
+                #snake.speed = [1, 0]
+                #break
+    if botAction == UP:
+        if snake.speed != [0, 1]:
+            snake.speed = [0, -1]
+    elif botAction == DOWN:
+        if snake.speed != [0, -1]:
+            snake.speed = [0, 1]
+    elif botAction == LEFT:
+        if snake.speed != [1, 0]:
+            snake.speed = [-1, 0]
+    elif botAction == RIGHT:
+        if snake.speed != [-1, 0]:
+            snake.speed = [1, 0]
         
 
     gameDisplay.fill(BLACK)
@@ -89,6 +106,7 @@ while not gameShouldClose:
     # Restart game if ded
     if(snake.checkCollision()):
         episodes += 1
+        bot.update(episodes)
         init()
         
     FPSCLOCK.tick(FPS)
