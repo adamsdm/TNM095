@@ -9,7 +9,8 @@ WHITE = (255,255,255)
 class Snake:
     # Constructor
     def __init__(self, window):
-        self.body = [ [0,4], [0,3], [0,2], [0,1], [0,0] ]
+        self.body = [ [BLOCK_SIZE*2, BLOCK_SIZE + 4], [BLOCK_SIZE*2,BLOCK_SIZE + 3], 
+                    [BLOCK_SIZE*2,BLOCK_SIZE + 2], [BLOCK_SIZE*2,BLOCK_SIZE + 1], [BLOCK_SIZE*2,BLOCK_SIZE] ]
         self.window = window
         self.speed = [0,1]
         self.score = 0

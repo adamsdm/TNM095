@@ -19,6 +19,7 @@ FPSCLOCK = pygame.time.Clock()
 GRID_SIZE = [20, 20]
 PADDING = BLOCK_SIZE/10
 
+episodes = 0
 
 gameDisplay = pygame.display.set_mode((GRID_SIZE[0]*BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
 pygame.display.set_caption("Snakebot")
@@ -36,11 +37,6 @@ def init():
     snake = Snake(gameDisplay)
     food = Food(gameDisplay)
     bot = Bot(snake, food)    
-
-
-
-
-
 
 
 gameShouldClose = False
@@ -76,6 +72,8 @@ while not gameShouldClose:
     gameDisplay.fill(BLACK)
     textsurface = myfont.render("Score: " + str(snake.score), False, (255, 255, 0))
     gameDisplay.blit(textsurface,(0,0))
+    textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
+    gameDisplay.blit(textsurfaceEpisodes, (5 * BLOCK_SIZE, 0))
 
     
     # Render shit
@@ -91,6 +89,7 @@ while not gameShouldClose:
 
     # Restart game if ded
     if(snake.checkCollision()):
+        episodes += 1
         init()
         
     FPSCLOCK.tick(FPS)
