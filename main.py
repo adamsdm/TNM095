@@ -19,6 +19,7 @@ FPSCLOCK = pygame.time.Clock()
 GRID_SIZE = [21, 21]
 PADDING = BLOCK_SIZE/10
 
+episodes = 0
 
 gameDisplay = pygame.display.set_mode((GRID_SIZE[0]*BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
 pygame.display.set_caption("Snakebot")
@@ -38,20 +39,15 @@ def init():
     bot = Bot(snake, food)    
 
 
-
-
-
-
-
 gameShouldClose = False
 
 init()
 while not gameShouldClose:
     print("start")
+    bot.act()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
-        
         # Handle movement
         
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_UP):
@@ -75,6 +71,8 @@ while not gameShouldClose:
     gameDisplay.fill(BLACK)
     textsurface = myfont.render("Score: " + str(snake.score), False, (255, 255, 0))
     gameDisplay.blit(textsurface,(0,0))
+    textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
+    gameDisplay.blit(textsurfaceEpisodes, (5 * BLOCK_SIZE, 0))
 
     
     # Render shit
@@ -90,6 +88,7 @@ while not gameShouldClose:
 
     # Restart game if ded
     if(snake.checkCollision()):
+        episodes += 1
         init()
         
     FPSCLOCK.tick(FPS)

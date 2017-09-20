@@ -3,6 +3,7 @@ import math
 
 class Snake:
     # Constructor
+        
     def __init__(self, window, GRID_SIZE, BLOCK_SIZE):
         self.body = [ [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)], 
                       [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 1], 
