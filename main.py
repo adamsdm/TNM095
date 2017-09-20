@@ -44,6 +44,8 @@ class Snake:
 
     def move(self):
         head = self.body[0]
+
+        print(head)
         # Calculate next position the snake will be in
         nextPosX = head[0] + self.speed[0]
         nextPosY = head[1] + self.speed[1]
@@ -95,16 +97,20 @@ while not gameShouldClose:
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_UP):
             if snake.speed != [0, 1]:
                 snake.speed = [0, -1]
+                print("UP")
                 break
         elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN):
             if snake.speed != [0, -1]:
                 snake.speed = [0, 1]
+                print("DOWN")
                 break
         elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT):
             if snake.speed != [1, 0]:
                 snake.speed = [-1, 0]
+                print("LEFT")
                 break
         elif event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT):
+            print("RIGHT")
             if snake.speed != [-1, 0]:
                 snake.speed = [1, 0]
                 break
@@ -116,8 +122,8 @@ while not gameShouldClose:
 
     
     # Render shit
-    snake.draw()
     snake.move()
+    snake.draw()
     food.draw()
 
     if(snake.body[0] == food.position):
