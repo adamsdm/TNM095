@@ -1,6 +1,7 @@
 import pygame
 from random import randint
 from bot import Bot
+from food import Food
 
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 12)
@@ -17,13 +18,6 @@ FPSCLOCK = pygame.time.Clock()
 GRID_SIZE = [20, 20]
 PADDING = BLOCK_SIZE/10
 
-class Food:
-    def __init__(self, window):
-        self.position = [randint(0, GRID_SIZE[0]-1), randint(0, GRID_SIZE[1]-1)]
-        self.window = window
-    
-    def draw(self):
-        pygame.draw.rect(self.window, GREEN, [self.position[0]*BLOCK_SIZE + PADDING, self.position[1]*BLOCK_SIZE + PADDING, BLOCK_SIZE-2*PADDING,BLOCK_SIZE-2*PADDING])
 
 class Snake:
     # Constructor
