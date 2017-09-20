@@ -16,7 +16,7 @@ FPS = 10
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
-GRID_SIZE = [20, 20]
+GRID_SIZE = [21, 21]
 PADDING = BLOCK_SIZE/10
 
 

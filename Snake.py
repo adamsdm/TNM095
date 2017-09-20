@@ -1,13 +1,15 @@
 import pygame
-
-
-
-
+import math
 
 class Snake:
     # Constructor
     def __init__(self, window, GRID_SIZE, BLOCK_SIZE):
-        self.body = [ [0,4], [0,3], [0,2], [0,1], [0,0] ]
+        self.body = [ [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 1], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 2], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 3], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 4] 
+                    ]
         self.window = window
         self.speed = [0,1]
         self.score = 0
