@@ -1,22 +1,22 @@
 import pygame
 from random import randint
+from bot import Bot
 from food import Food
 from Snake import Snake
 
 pygame.init()
 myfont = pygame.font.SysFont("monospace", 12)
 
-
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
-BLOCK_SIZE = 10 
+BLOCK_SIZE = 20 
 FPS = 10
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
-GRID_SIZE = [40, 40]
+GRID_SIZE = [20, 20]
 PADDING = BLOCK_SIZE/10
 
 
@@ -29,13 +29,26 @@ pygame.font.init() # you have to call this at the start,
                    # if you want to use this module.
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
-snake = Snake(gameDisplay)
-food = Food(gameDisplay)
+def init():
+    global snake
+    global food
+    global bot
+    snake = Snake(gameDisplay)
+    food = Food(gameDisplay)
+    bot = Bot(snake, food)    
+
+
+
+
+
+
 
 gameShouldClose = False
 
+init()
 while not gameShouldClose:
-
+    print("start")
+    bot.act()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
@@ -45,20 +58,16 @@ while not gameShouldClose:
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_UP):
             if snake.speed != [0, 1]:
                 snake.speed = [0, -1]
-                print("UP")
                 break
         elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN):
             if snake.speed != [0, -1]:
                 snake.speed = [0, 1]
-                print("DOWN")
                 break
         elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT):
             if snake.speed != [1, 0]:
                 snake.speed = [-1, 0]
-                print("LEFT")
                 break
         elif event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT):
-            print("RIGHT")
             if snake.speed != [-1, 0]:
                 snake.speed = [1, 0]
                 break
@@ -82,7 +91,7 @@ while not gameShouldClose:
 
     # Restart game if ded
     if(snake.checkCollision()):
-        snake = Snake(gameDisplay)
+        init()
         
     FPSCLOCK.tick(FPS)
     pygame.display.update()
