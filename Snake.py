@@ -31,7 +31,7 @@ class Snake:
     def move(self):
         head = self.body[0]
 
-        print(head)
+        
         # Calculate next position the snake will be in
         nextPosX = head[0] + self.speed[0]
         nextPosY = head[1] + self.speed[1]
