@@ -34,8 +34,8 @@ def init():
     global snake
     global food
     global bot
-    snake = Snake(gameDisplay)
-    food = Food(gameDisplay)
+    snake = Snake(gameDisplay, GRID_SIZE, BLOCK_SIZE)
+    food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
     bot = Bot(snake, food)    
 
 
@@ -48,7 +48,6 @@ while not gameShouldClose:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
-        
         # Handle movement
         
         if event.type == pygame.KEYDOWN and (event.key == pygame.K_UP):
@@ -83,7 +82,7 @@ while not gameShouldClose:
 
     if(snake.body[0] == food.position):
         snake.eat(True)
-        food = Food(gameDisplay)
+        food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
     else:
         snake.eat(False)
 
