@@ -12,7 +12,7 @@ class Bot:
         self.snake = snake
         self.episodes = 0
     
-    def update(episodes):
+    def update(self, episodes):
         self.episodes = episodes
     
     def act(self):
