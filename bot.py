@@ -9,9 +9,16 @@ class Bot:
     def __init__(self,
                  snake,
                  food):
+        """ Creates an AI bot using q-learning
+            variables:
+            alpha: learning rate, high values consider recent event more
+            gamma: discount factor, low value will yield a greedy snake whilst high values makes it consider long term rewards more
+        """
         self.snake = snake
         self.episodes = 0
         self.food = food
+        self.alpha = 0.1
+        self.gamma = 0.5
     
     def update(self, episodes):
         self.episodes = episodes
