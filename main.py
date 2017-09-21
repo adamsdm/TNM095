@@ -55,34 +55,34 @@ while not gameShouldClose:
             gameShouldClose = True
         ## Handle movement
         
-        if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
-            if snake.speed != [0, 1]:
-                snake.speed = [0, -1]
-                break
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
-            if snake.speed != [0, -1]:
-                snake.speed = [0, 1]
-                break
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
-            if snake.speed != [1, 0]:
-                snake.speed = [-1, 0]
-                break
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
-            if snake.speed != [-1, 0]:
-                snake.speed = [1, 0]
-                break
-    # if botAction == UP:
-    #     if snake.speed != [0, 1]:
-    #         snake.speed = [0, -1]
-    # elif botAction == DOWN:
-    #     if snake.speed != [0, -1]:
-    #         snake.speed = [0, 1]
-    # elif botAction == LEFT:
-    #     if snake.speed != [1, 0]:
-    #         snake.speed = [-1, 0]
-    # elif botAction == RIGHT:
-    #     if snake.speed != [-1, 0]:
-    #         snake.speed = [1, 0]
+        # if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
+        #     if snake.speed != [0, 1]:
+        #         snake.speed = [0, -1]
+        #         break
+        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
+        #     if snake.speed != [0, -1]:
+        #         snake.speed = [0, 1]
+        #         break
+        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
+        #     if snake.speed != [1, 0]:
+        #         snake.speed = [-1, 0]
+        #         break
+        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
+        #     if snake.speed != [-1, 0]:
+        #         snake.speed = [1, 0]
+        #         break
+    if botAction == UP:
+        if snake.speed != [0, 1]:
+            snake.speed = [0, -1]
+    elif botAction == DOWN:
+        if snake.speed != [0, -1]:
+            snake.speed = [0, 1]
+    elif botAction == LEFT:
+        if snake.speed != [1, 0]:
+            snake.speed = [-1, 0]
+    elif botAction == RIGHT:
+        if snake.speed != [-1, 0]:
+            snake.speed = [1, 0]
         
 
     gameDisplay.fill(BLACK)
