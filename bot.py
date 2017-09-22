@@ -24,17 +24,8 @@ class Bot:
         self.episodes = episodes
     
     def act(self):
-        rnd = randint(0,3)
-        dist = self.calc_dist(self.snake.body[0])
-        new_poses = []
-
-        for i in range(0,4):
-            head = self.calc_pos(i)
-            dist = self.calc_dist(head)
-            new_poses.append(dist)
-
-        action = new_poses.index(min(new_poses))
-        #print ("action = " + str(action))
+       
+        action = self.move_to_food()
 
         #right
         if action == 0:
@@ -75,3 +66,17 @@ class Bot:
 
     def set_food(self, food):
         self.food = food
+        
+    def move_to_food(self):
+        new_poses = []
+
+        for i in range(0,4):
+            head = self.calc_pos(i)
+            dist = self.calc_dist(head)
+            new_poses.append(dist)
+
+        action = new_poses.index(min(new_poses))
+        #print ("action = " + str(action))
+        return action
+        
+        
