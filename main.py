@@ -10,30 +10,31 @@ LEFT = 2
 DOWN = 3
 
 pygame.init()
-myfont = pygame.font.SysFont("monospace", 12)
+myfont = pygame.font.SysFont("monospace", 20)
 
 WHITE = (255,255,255)
+GRAY = (100,100,100)
 BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
-FPS = 3
+FPS = 5
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
 GRID_SIZE = [21, 21]
 PADDING = BLOCK_SIZE/10
+UI_HEIGHT = 70;
 
 episodes = 0
 
-gameDisplay = pygame.display.set_mode((GRID_SIZE[0]*BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
+gameDisplay = pygame.display.set_mode((GRID_SIZE[0]*BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE + UI_HEIGHT) )
 pygame.display.set_caption("Snakebot")
 gameDisplay.fill(BLACK)
 pygame.display.update()
 
 pygame.font.init() # you have to call this at the start, 
-                   # if you want to use this module.
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
 
 def init():
     global snake
@@ -54,26 +55,26 @@ while not gameShouldClose:
         if event.type == pygame.QUIT:
             gameShouldClose = True
 
-        '''
+        
         # Handle movement
         
-        if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
-            if snake.speed != [0, 1]:
-                snake.speed = [0, -1]
-                break
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
-            if snake.speed != [0, -1]:
-                snake.speed = [0, 1]
-                break
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
-            if snake.speed != [1, 0]:
-                snake.speed = [-1, 0]
-                break
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
-            if snake.speed != [-1, 0]:
-                snake.speed = [1, 0]
-                break
-        '''
+        # if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
+        #     if snake.speed != [0, 1]:
+        #         snake.speed = [0, -1]
+        #         break
+        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
+        #     if snake.speed != [0, -1]:
+        #         snake.speed = [0, 1]
+        #         break
+        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
+        #     if snake.speed != [1, 0]:
+        #         snake.speed = [-1, 0]
+        #         break
+        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
+        #     if snake.speed != [-1, 0]:
+        #         snake.speed = [1, 0]
+        #         break
+        
 
     if botAction == UP:
         print("UP");
@@ -94,16 +95,19 @@ while not gameShouldClose:
         
 
     gameDisplay.fill(BLACK)
-    textsurface = myfont.render("Score: " + str(snake.score), False, (255, 255, 0))
-    gameDisplay.blit(textsurface,(0,0))
-    textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
-    gameDisplay.blit(textsurfaceEpisodes, (5 * BLOCK_SIZE, 0))
 
-    
     # Render shit
     snake.move()
     snake.draw()
     food.draw()
+
+    # Draw UI
+    pygame.draw.rect(gameDisplay, GRAY, [0 , GRID_SIZE[1]*BLOCK_SIZE, GRID_SIZE[0]*BLOCK_SIZE, UI_HEIGHT])
+    
+    textsurface = myfont.render("Score: " + str(snake.score), False, (255, 255, 0))
+    gameDisplay.blit(textsurface,(0,GRID_SIZE[1]*BLOCK_SIZE))
+    textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
+    gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE))
 
     if(snake.body[0] == food.position):
         snake.eat(True)

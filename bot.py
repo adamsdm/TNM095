@@ -98,8 +98,8 @@ class Bot:
         for i in range(4):     
 
             nextHead = self.calc_pos(i)
-            dist = self.calc_manhattan_dist(nextHead)
-            #dist = self.calc_euclid_dist(nextHead)
+            #dist = self.calc_manhattan_dist(nextHead)
+            dist = self.calc_euclid_dist(nextHead)
             new_poses[i] = dist
 
             if i==skipIndex:
