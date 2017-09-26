@@ -1,15 +1,16 @@
 import pygame
 import math
+from random import randint
 
 class Snake:
     # Constructor
         
     def __init__(self, window, GRID_SIZE, BLOCK_SIZE):
         self.body = [ [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)], 
-                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 1], 
-                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 2], 
-                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 3], 
-                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2) - 4] 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)], 
+                      [math.floor(GRID_SIZE[0]/2),math.floor(GRID_SIZE[1]/2)] 
                     ]
         self.window = window
         self.speed = [0,1]
@@ -17,15 +18,14 @@ class Snake:
         self.GRID_SIZE = GRID_SIZE
         self.BLOCK_SIZE = BLOCK_SIZE
         self.PADDING = BLOCK_SIZE/10
-        self.WHITE = (255,255,255)
+        self.COLOR = (randint(100, 255),randint(100, 255),randint(100, 255))
 
     def draw(self):
         for bodypart in self.body:
-            pygame.draw.rect(self.window, self.WHITE, [bodypart[0]*self.BLOCK_SIZE + self.PADDING, bodypart[1]*self.BLOCK_SIZE + self.PADDING, self.BLOCK_SIZE-2*self.PADDING,self.BLOCK_SIZE-2*self.PADDING])
+            pygame.draw.rect(self.window, self.COLOR, [bodypart[0]*self.BLOCK_SIZE + self.PADDING, bodypart[1]*self.BLOCK_SIZE + self.PADDING, self.BLOCK_SIZE-2*self.PADDING,self.BLOCK_SIZE-2*self.PADDING])
+
     def eat(self, didEat):
         if(not didEat):
-            del self.body[-1] # Remove the last position if snake didn't eat
-        else:
             self.score += 1
 
     def move(self):
@@ -37,6 +37,7 @@ class Snake:
         nextPosY = head[1] + self.speed[1]
         nextPos = [nextPosX, nextPosY]
         self.body.insert(0, nextPos) # insert the new position
+        del self.body[-1] # Remove the last position if snake didn't eat
     
         
     
