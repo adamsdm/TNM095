@@ -85,14 +85,14 @@ class Bot:
             print("Curr dirr: RIGHT");
             skipIndex = LEFT
         elif currDirr == [0,1]: # Up
-            skipIndex = DOWN
-            print("Curr dirr: Up");
+            skipIndex = UP
+            print("Curr dirr: down");
         elif currDirr == [-1, 0]: # Left
             skipIndex = RIGHT
             print("Curr dirr: Left");
         elif currDirr == [0, -1]: # down
-            skipIndex = UP
-            print("Curr dirr: down");
+            skipIndex = DOWN
+            print("Curr dirr: up");
 
 
         for i in range(4):     
@@ -102,8 +102,8 @@ class Bot:
             #dist = self.calc_euclid_dist(nextHead)
             new_poses[i] = dist
 
-            # if i==skipIndex:
-            #     new_poses[i] = float("inf")
+            if i==skipIndex:
+                new_poses[i] = float("inf")
         
         print(new_poses)
         action = new_poses.index(min(new_poses))
