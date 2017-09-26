@@ -102,8 +102,8 @@ class Bot:
             #dist = self.calc_euclid_dist(nextHead)
             new_poses[i] = dist
 
-            if i==skipIndex:
-                new_poses[i] = float("inf")
+            # if i==skipIndex:
+            #     new_poses[i] = float("inf")
         
         print(new_poses)
         action = new_poses.index(min(new_poses))
