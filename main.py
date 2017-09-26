@@ -17,12 +17,12 @@ GRAY = (100,100,100)
 BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
-BLOCK_SIZE = 14 
+BLOCK_SIZE = 20 
 fps = 5
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
-GRID_SIZE = [71, 41]
+GRID_SIZE = [21, 21]
 PADDING = BLOCK_SIZE/10
 UI_HEIGHT = 70;
 
@@ -38,12 +38,12 @@ pygame.font.init() # you have to call this at the start,
 highscore = 0;
 
 def init():
-    global snake1
+    global snake
     global food
-    global bot1
-    snake1 = Snake(gameDisplay, GRID_SIZE, BLOCK_SIZE)
+    global bot
+    snake = Snake(gameDisplay, GRID_SIZE, BLOCK_SIZE)
     food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
-    bot1 = Bot(snake1, food)    
+    bot = Bot(snake, food)    
 
 
 gameShouldClose = False
@@ -51,24 +51,7 @@ gameShouldClose = False
 init()
 while not gameShouldClose:
     
-    botAction = bot1.act()
-    if botAction == UP:
-        print("UP");
-        if snake1.speed != [0, 1]:
-            snake1.speed = [0, -1]
-    elif botAction == DOWN:
-        print("DOWN");
-        if snake1.speed != [0, -1]:
-            snake1.speed = [0, 1]
-    elif botAction == LEFT:
-        print("LEFT");
-        if snake1.speed != [1, 0]:
-            snake1.speed = [-1, 0]
-    elif botAction == RIGHT:
-        print("RIGHT");
-        if snake1.speed != [-1, 0]:
-            snake1.speed = [1, 0]
-            
+    botAction = bot.act()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
@@ -98,21 +81,39 @@ while not gameShouldClose:
         #         break
         
 
+    if botAction == UP:
+        print("UP");
+        if snake.speed != [0, 1]:
+            snake.speed = [0, -1]
+    elif botAction == DOWN:
+        print("DOWN");
+        if snake.speed != [0, -1]:
+            snake.speed = [0, 1]
+    elif botAction == LEFT:
+        print("LEFT");
+        if snake.speed != [1, 0]:
+            snake.speed = [-1, 0]
+    elif botAction == RIGHT:
+        print("RIGHT");
+        if snake.speed != [-1, 0]:
+            snake.speed = [1, 0]
+        
+
     gameDisplay.fill(BLACK)
 
     # Render shit
-    snake1.move()
-    snake1.draw()
+    snake.move()
+    snake.draw()
     food.draw()
 
     # Update highscore
-    if snake1.score > highscore:
-        highscore = snake1.score
+    if snake.score > highscore:
+        highscore = snake.score
 
     # Draw UI
     pygame.draw.rect(gameDisplay, GRAY, [0 , GRID_SIZE[1]*BLOCK_SIZE, GRID_SIZE[0]*BLOCK_SIZE, UI_HEIGHT])
     
-    textsurface = myfont.render("Score: " + str(snake1.score), False, (255, 255, 0))
+    textsurface = myfont.render("Score: " + str(snake.score), False, (255, 255, 0))
     gameDisplay.blit(textsurface,(0,GRID_SIZE[1]*BLOCK_SIZE))
     textsurfaceHighscore = myfont.render("Highscore: " + str(highscore), False, (255, 255, 0))
     gameDisplay.blit(textsurfaceHighscore,(7 * BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
@@ -121,17 +122,20 @@ while not gameShouldClose:
     textsurfaceFPS = myfont.render("FPS: " + str(fps), False, (255,255,0))
     gameDisplay.blit(textsurfaceFPS, (0, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
 
-    if(snake1.body[0] == food.position):
-        snake1.eat(True)
+    #TODO:  KIVY SLIDER
+    # https://kivy.org/docs/api-kivy.uix.slider.html
+
+    if(snake.body[0] == food.position):
+        snake.eat(True)
         food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
-        bot1.set_food(food)
+        bot.set_food(food)
     else:
-        snake1.eat(False)
+        snake.eat(False)
 
     # Restart game if ded
-    if(snake1.checkCollision()):
+    if(snake.checkCollision()):
         episodes += 1
-        bot1.update(episodes)
+        bot.update(episodes)
         init()
         
     FPSCLOCK.tick(fps)
