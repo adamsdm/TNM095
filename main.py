@@ -17,7 +17,7 @@ BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
-FPS = 5
+FPS = 3
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
@@ -53,34 +53,42 @@ while not gameShouldClose:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
-        ## Handle movement
+
+        '''
+        # Handle movement
         
-        # if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
-        #     if snake.speed != [0, 1]:
-        #         snake.speed = [0, -1]
-        #         break
-        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
-        #     if snake.speed != [0, -1]:
-        #         snake.speed = [0, 1]
-        #         break
-        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
-        #     if snake.speed != [1, 0]:
-        #         snake.speed = [-1, 0]
-        #         break
-        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
-        #     if snake.speed != [-1, 0]:
-        #         snake.speed = [1, 0]
-        #         break
+        if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
+            if snake.speed != [0, 1]:
+                snake.speed = [0, -1]
+                break
+        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
+            if snake.speed != [0, -1]:
+                snake.speed = [0, 1]
+                break
+        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
+            if snake.speed != [1, 0]:
+                snake.speed = [-1, 0]
+                break
+        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
+            if snake.speed != [-1, 0]:
+                snake.speed = [1, 0]
+                break
+        '''
+
     if botAction == UP:
+        print("UP");
         if snake.speed != [0, 1]:
             snake.speed = [0, -1]
     elif botAction == DOWN:
+        print("DOWN");
         if snake.speed != [0, -1]:
             snake.speed = [0, 1]
     elif botAction == LEFT:
+        print("LEFT");
         if snake.speed != [1, 0]:
             snake.speed = [-1, 0]
     elif botAction == RIGHT:
+        print("RIGHT");
         if snake.speed != [-1, 0]:
             snake.speed = [1, 0]
         

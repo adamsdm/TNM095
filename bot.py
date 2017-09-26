@@ -1,4 +1,5 @@
 from random import randint
+from math import sqrt
 
 RIGHT = 0
 UP = 1
@@ -40,12 +41,20 @@ class Bot:
         elif action == 3:
             return DOWN
 
-    def calc_dist(self, head):
+    def calc_manhattan_dist(self, head):
         """calculates the manhattan distance 
             from the snakes head to the current food position"""
         d_x = abs(self.food.position[0] - head[0])
         d_y = abs(self.food.position[1] - head[1])
         dist = d_x + d_y
+        return dist
+
+    def calc_euclid_dist(self, head):
+        """calculates the euclidian distance 
+            from the snakes head to the current food position"""
+        d_x = abs(self.food.position[0] - head[0])
+        d_y = abs(self.food.position[1] - head[1])
+        dist = sqrt(pow(d_x,2) + pow(d_y, 2));
         return dist
 
     def calc_pos(self, dir):
@@ -68,15 +77,37 @@ class Bot:
         self.food = food
         
     def move_to_food(self):
-        new_poses = []
+        new_poses = [0.0]*4
 
-        for i in range(0,4):
-            head = self.calc_pos(i)
-            dist = self.calc_dist(head)
-            new_poses.append(dist)
+        currDirr = self.snake.speed
 
+        if currDirr == [1,0]: # Right
+            print("Curr dirr: RIGHT");
+            skipIndex = LEFT
+        elif currDirr == [0,1]: # Up
+            skipIndex = DOWN
+            print("Curr dirr: Up");
+        elif currDirr == [-1, 0]: # Left
+            skipIndex = RIGHT
+            print("Curr dirr: Left");
+        elif currDirr == [0, -1]: # down
+            skipIndex = UP
+            print("Curr dirr: down");
+
+
+        for i in range(4):     
+
+            nextHead = self.calc_pos(i)
+            dist = self.calc_manhattan_dist(nextHead)
+            #dist = self.calc_euclid_dist(nextHead)
+            new_poses[i] = dist
+
+            if i==skipIndex:
+                new_poses[i] = float("inf")
+        
+        print(new_poses)
         action = new_poses.index(min(new_poses))
-        #print ("action = " + str(action))
+        print ("action = " + str(action))
         return action
         
         
