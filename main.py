@@ -43,7 +43,7 @@ def init():
     global bot
     snake = Snake(gameDisplay, GRID_SIZE, BLOCK_SIZE)
     food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
-    bot = Bot(snake, food)    
+    bot = Bot(snake, food, GRID_SIZE)    
 
 
 gameShouldClose = False
@@ -136,6 +136,7 @@ while not gameShouldClose:
         
     FPSCLOCK.tick(fps)
     pygame.display.update()
+    
     
 
 

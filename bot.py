@@ -10,7 +10,8 @@ DOWN = 3
 class Bot:
     def __init__(self,
                  snake,
-                 food):
+                 food,
+                 GRID_SIZE):
         """ Creates an AI bot using q-learning
             variables:
             alpha: learning rate, high values consider recent event more
@@ -21,13 +22,16 @@ class Bot:
         self.food = food
         self.alpha = 0.1
         self.gamma = 0.5
+        self.GRID_SIZE = GRID_SIZE
     
     def update(self, episodes):
         self.episodes = episodes
     
     def act(self):
         
-        self.is_close_to_body()
+        #is_close = self.is_close_to_body()
+        is_closeBorder = self.is_close_to_border()
+        print(str(is_closeBorder))
         
         action = self.move_to_food()
 
@@ -107,7 +111,6 @@ class Bot:
             if i==skipIndex:
                 new_poses[i] = float("inf")
         
-        
         action = new_poses.index(min(new_poses))
         return action
         
@@ -115,9 +118,52 @@ class Bot:
         proximity = [[0,0]]*5
         
         temp_head = copy.deepcopy(self.snake.body[0])
+        #needs smarter way
+        if self.snake.speed == [0,-1]: #UP
+            proximity[0] = [temp_head[0] - 1, temp_head[1]] #LEFT
+            proximity[1] = [temp_head[0] + 1, temp_head[1]] #RIGHT
+            proximity[2] = [temp_head[0], temp_head[1] - 1] #UP
+            proximity[3] = [temp_head[0] - 1, temp_head[1] - 1] #UP-LEFT
+            proximity[4] = [temp_head[0] + 1, temp_head[1] - 1] #RIGHT
+        elif self.snake.speed == [0,1]: #DOWN
+            proximity[0] = [temp_head[0] + 1, temp_head[1]] #LEFT
+            proximity[1] = [temp_head[0] - 1, temp_head[1]] #RIGHT
+            proximity[2] = [temp_head[0], temp_head[1] + 1] #UP
+            proximity[3] = [temp_head[0] + 1, temp_head[1] + 1] #UP-LEFT
+            proximity[4] = [temp_head[0] - 1, temp_head[1] + 1] #RIGHT
+        elif self.snake.speed == [1,0]:#RIGHT
+            proximity[0] = [temp_head[0] , temp_head[1] - 1] #LEFT
+            proximity[1] = [temp_head[0] , temp_head[1] + 1] #RIGHT
+            proximity[2] = [temp_head[0] + 1, temp_head[1]] #UP
+            proximity[3] = [temp_head[0] + 1, temp_head[1] - 1] #UP-LEFT
+            proximity[4] = [temp_head[0] + 1, temp_head[1] + 1] #RIGHT
+        elif self.snake.speed == [-1,0]:
+            proximity[0] = [temp_head[0], temp_head[1] + 1] #LEFT
+            proximity[1] = [temp_head[0], temp_head[1] - 1] #RIGHT
+            proximity[2] = [temp_head[0] - 1, temp_head[1]] #UP
+            proximity[3] = [temp_head[0] - 1, temp_head[1] + 1] #UP-LEFT
+            proximity[4] = [temp_head[0] - 1, temp_head[1] - 1] #RIGHT
         
-        proximity[0] = [temp_head[0] - 1, temp_head[1]]
-        proximity[1
+        for pos in proximity:
+            for body_part in self.snake.body:
+                if pos == body_part:
+                    return True
+        return False        
+        
+    def is_close_to_border(self):
+        temp_head = copy.deepcopy(self.snake.body[0])
+        print(temp_head)
+        if temp_head[0] == self.GRID_SIZE[0] - 1:
+            return True
+        elif temp_head[0] == 0:
+            return True
+        elif temp_head[1] == 0:
+            return True
+        elif temp_head[1] == self.GRID_SIZE[1] - 1:
+            return True
+        return False
+        
+            
         
         
         
