@@ -105,9 +105,9 @@ class Bot:
             if i==skipIndex:
                 new_poses[i] = float("inf")
         
-        print(new_poses)
+        #print(new_poses)
         action = new_poses.index(min(new_poses))
-        print ("action = " + str(action))
+        #print ("action = " + str(action))
         return action
         
         

@@ -18,8 +18,9 @@ BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 14 
-fps = 5
+fps = 15
 FPSCLOCK = pygame.time.Clock()
+NUM_SNAKES = 4
 
 # Dimension of grid
 GRID_SIZE = [71, 41]
@@ -38,12 +39,15 @@ pygame.font.init() # you have to call this at the start,
 highscore = 0;
 
 def init():
-    global snake1
-    global food
+    global snakes
+    global foods
     global bot1
-    snake1 = Snake(gameDisplay, GRID_SIZE, BLOCK_SIZE)
-    food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
-    bot1 = Bot(snake1, food)    
+    foods = [Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)]
+
+    snakes = []
+
+    for i in range(NUM_SNAKES):
+        snakes.append(Snake(gameDisplay, [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])], GRID_SIZE, BLOCK_SIZE, foods))
 
 
 gameShouldClose = False
@@ -51,24 +55,7 @@ gameShouldClose = False
 init()
 while not gameShouldClose:
     
-    botAction = bot1.act()
-    if botAction == UP:
-        print("UP");
-        if snake1.speed != [0, 1]:
-            snake1.speed = [0, -1]
-    elif botAction == DOWN:
-        print("DOWN");
-        if snake1.speed != [0, -1]:
-            snake1.speed = [0, 1]
-    elif botAction == LEFT:
-        print("LEFT");
-        if snake1.speed != [1, 0]:
-            snake1.speed = [-1, 0]
-    elif botAction == RIGHT:
-        print("RIGHT");
-        if snake1.speed != [-1, 0]:
-            snake1.speed = [1, 0]
-            
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
@@ -78,41 +65,32 @@ while not gameShouldClose:
         elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_MINUS)):
             fps -= 5;
 
-        
-        # Handle movement
-        # if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
-        #     if snake.speed != [0, 1]:
-        #         snake.speed = [0, -1]
-        #         break
-        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
-        #     if snake.speed != [0, -1]:
-        #         snake.speed = [0, 1]
-        #         break
-        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT)):
-        #     if snake.speed != [1, 0]:
-        #         snake.speed = [-1, 0]
-        #         break
-        # elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT)):
-        #     if snake.speed != [-1, 0]:
-        #         snake.speed = [1, 0]
-        #         break
-        
-
     gameDisplay.fill(BLACK)
 
     # Render shit
-    snake1.move()
-    snake1.draw()
-    food.draw()
+    for i in range(len(snakes)):
+        snakes[i].act()
+        snakes[i].move()
+        snakes[i].draw()
+        if( snakes[i].checkCollision() ):
+            del snakes[i]
+            # Restart game if ded
+            if(len(snakes) == 0):
+                episodes += 1
+                init()
+        
+
+    for food in foods:
+        food.draw()
 
     # Update highscore
-    if snake1.score > highscore:
-        highscore = snake1.score
+    if snakes[0].score > highscore:
+        highscore = snakes[0].score
 
     # Draw UI
     pygame.draw.rect(gameDisplay, GRAY, [0 , GRID_SIZE[1]*BLOCK_SIZE, GRID_SIZE[0]*BLOCK_SIZE, UI_HEIGHT])
     
-    textsurface = myfont.render("Score: " + str(snake1.score), False, (255, 255, 0))
+    textsurface = myfont.render("Score: " + str(snakes[0].score), False, (255, 255, 0))
     gameDisplay.blit(textsurface,(0,GRID_SIZE[1]*BLOCK_SIZE))
     textsurfaceHighscore = myfont.render("Highscore: " + str(highscore), False, (255, 255, 0))
     gameDisplay.blit(textsurfaceHighscore,(7 * BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
@@ -121,18 +99,6 @@ while not gameShouldClose:
     textsurfaceFPS = myfont.render("FPS: " + str(fps), False, (255,255,0))
     gameDisplay.blit(textsurfaceFPS, (0, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
 
-    if(snake1.body[0] == food.position):
-        snake1.eat(True)
-        food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
-        bot1.set_food(food)
-    else:
-        snake1.eat(False)
-
-    # Restart game if ded
-    if(snake1.checkCollision()):
-        episodes += 1
-        bot1.update(episodes)
-        init()
         
     FPSCLOCK.tick(fps)
     pygame.display.update()
