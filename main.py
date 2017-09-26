@@ -77,19 +77,15 @@ while not gameShouldClose:
         
 
     if botAction == UP:
-        print("UP");
         if snake.speed != [0, 1]:
             snake.speed = [0, -1]
     elif botAction == DOWN:
-        print("DOWN");
         if snake.speed != [0, -1]:
             snake.speed = [0, 1]
     elif botAction == LEFT:
-        print("LEFT");
         if snake.speed != [1, 0]:
             snake.speed = [-1, 0]
     elif botAction == RIGHT:
-        print("RIGHT");
         if snake.speed != [-1, 0]:
             snake.speed = [1, 0]
         

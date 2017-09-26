@@ -26,7 +26,9 @@ class Bot:
         self.episodes = episodes
     
     def act(self):
-       
+        
+        self.is_close_to_body()
+        
         action = self.move_to_food()
 
         #right
@@ -106,9 +108,19 @@ class Bot:
             if i==skipIndex:
                 new_poses[i] = float("inf")
         
-        print(new_poses)
+        
         action = new_poses.index(min(new_poses))
-        print ("action = " + str(action))
         return action
+        
+    def is_close_to_body(self):
+        proximity = [[0,0]]*5
+        
+        temp_head = copy.deepcopy(self.snake.body[0])
+        
+        proximity[0] = [temp_head[0] - 1, temp_head[1]]
+        proximity[1
+        
+        
+        
         
         
