@@ -18,7 +18,7 @@ BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
-FPS = 5
+fps = 5
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
@@ -54,10 +54,14 @@ while not gameShouldClose:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameShouldClose = True
+        
+        if (event.type == pygame.KEYDOWN and (event.key == pygame.K_PLUS)):
+            fps += 5;
+        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_MINUS)):
+            fps -= 5;
 
         
         # Handle movement
-        
         # if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
         #     if snake.speed != [0, 1]:
         #         snake.speed = [0, -1]
@@ -108,6 +112,8 @@ while not gameShouldClose:
     gameDisplay.blit(textsurface,(0,GRID_SIZE[1]*BLOCK_SIZE))
     textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
     gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE))
+    textsurfaceFPS = myfont.render("FPS: " + str(fps), False, (255,255,0))
+    gameDisplay.blit(textsurfaceFPS, (0, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
 
     #TODO:  KIVY SLIDER
     # https://kivy.org/docs/api-kivy.uix.slider.html
@@ -125,7 +131,7 @@ while not gameShouldClose:
         bot.update(episodes)
         init()
         
-    FPSCLOCK.tick(FPS)
+    FPSCLOCK.tick(fps)
     pygame.display.update()
     
 
