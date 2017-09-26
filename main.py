@@ -13,23 +13,23 @@ pygame.init()
 myfont = pygame.font.SysFont("monospace", 20)
 
 WHITE = (255,255,255)
-GRAY = (100,100,100)
+GRAY = (50,50,50)
 BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 14 
 fps = 15
 FPSCLOCK = pygame.time.Clock()
-NUM_SNAKES = 4
+NUM_SNAKES = 10
 
 # Dimension of grid
 GRID_SIZE = [71, 41]
 PADDING = BLOCK_SIZE/10
-UI_HEIGHT = 70;
+UI_WIDTH = 200
 
 episodes = 0
 
-gameDisplay = pygame.display.set_mode((GRID_SIZE[0]*BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE + UI_HEIGHT) )
+gameDisplay = pygame.display.set_mode((GRID_SIZE[0]*BLOCK_SIZE  + UI_WIDTH, GRID_SIZE[1]*BLOCK_SIZE) )
 pygame.display.set_caption("Snakebot")
 gameDisplay.fill(BLACK)
 pygame.display.update()
@@ -40,14 +40,22 @@ highscore = 0;
 
 def init():
     global snakes
+    global deadSnakes
     global foods
     global bot1
     foods = [Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)]
 
     snakes = []
+    deadSnakes = []
 
     for i in range(NUM_SNAKES):
-        snakes.append(Snake(gameDisplay, [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])], GRID_SIZE, BLOCK_SIZE, foods))
+        snakes.append( Snake(   gameDisplay, 
+                                [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])], 
+                                GRID_SIZE, 
+                                BLOCK_SIZE, 
+                                foods
+                            )
+                     )
 
 
 gameShouldClose = False
@@ -61,24 +69,37 @@ while not gameShouldClose:
             gameShouldClose = True
         
         if (event.type == pygame.KEYDOWN and (event.key == pygame.K_PLUS)):
-            fps += 5;
+            fps = max(1, fps + 5)
         elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_MINUS)):
-            fps -= 5;
+            fps = max(1, fps - 5)
 
     gameDisplay.fill(BLACK)
 
-    # Render shit
-    for i in range(len(snakes)):
-        snakes[i].act()
-        snakes[i].move()
-        snakes[i].draw()
-        if( snakes[i].checkCollision() ):
-            del snakes[i]
+    # Copy of snake to remove dead snakes
+    for snake in list(snakes):
+        # Check collision with walls or self
+        
+        if( snake.checkCollision() ):
+            deadSnakes.append(snake) 
+            snakes.remove(snake)
+            #snake.isAlive = False
             # Restart game if ded
             if(len(snakes) == 0):
                 episodes += 1
                 init()
-        
+
+    # For each snake
+    for snake in snakes:
+        snake.act()
+        snake.move()
+        snake.draw()
+
+        for otherSnake in list(snakes):
+            if ( otherSnake != snake and snake.checkCollideWithSnake(otherSnake) ):
+                deadSnakes.append(snake)
+                snakes.remove(snake)
+            
+
 
     for food in foods:
         food.draw()
@@ -88,16 +109,22 @@ while not gameShouldClose:
         highscore = snakes[0].score
 
     # Draw UI
-    pygame.draw.rect(gameDisplay, GRAY, [0 , GRID_SIZE[1]*BLOCK_SIZE, GRID_SIZE[0]*BLOCK_SIZE, UI_HEIGHT])
+    pygame.draw.rect(gameDisplay, GRAY, [GRID_SIZE[0]*BLOCK_SIZE , 0, UI_WIDTH, GRID_SIZE[1]*BLOCK_SIZE])
+
+    # Print all alive snakes    
+    textsurface = myfont.render("--ALIVE SNAKES--", False, (0,255,0))
+    gameDisplay.blit(textsurface,(GRID_SIZE[0]*BLOCK_SIZE + PADDING, 0))
+    for i in range(len(snakes)):
+        textsurface = myfont.render("Score: " + str(snakes[i].score), False, snakes[i].COLOR)
+        gameDisplay.blit(textsurface,(GRID_SIZE[0]*BLOCK_SIZE + PADDING, 20 + i*18))
     
-    textsurface = myfont.render("Score: " + str(snakes[0].score), False, (255, 255, 0))
-    gameDisplay.blit(textsurface,(0,GRID_SIZE[1]*BLOCK_SIZE))
-    textsurfaceHighscore = myfont.render("Highscore: " + str(highscore), False, (255, 255, 0))
-    gameDisplay.blit(textsurfaceHighscore,(7 * BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
-    textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
-    gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
-    textsurfaceFPS = myfont.render("FPS: " + str(fps), False, (255,255,0))
-    gameDisplay.blit(textsurfaceFPS, (0, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
+    # Print all dead snakes
+    textsurfaceDead = myfont.render("---DEAD SNAKES---" , False, (255,0,0))
+    gameDisplay.blit(textsurfaceDead,(GRID_SIZE[0]*BLOCK_SIZE + PADDING, GRID_SIZE[1]*BLOCK_SIZE/2 - 20))
+    for i in range(len(deadSnakes)):
+        textsurfaceDead = myfont.render("Score: " + str(deadSnakes[i].score), False, deadSnakes[i].COLOR)
+        gameDisplay.blit(textsurfaceDead,(GRID_SIZE[0]*BLOCK_SIZE + PADDING, GRID_SIZE[1]*BLOCK_SIZE/2 + i*18))
+
 
         
     FPSCLOCK.tick(fps)

@@ -10,9 +10,10 @@ UP = 1
 LEFT = 2
 DOWN = 3
 
+
+
 class Snake:
     # Constructor
-        
     def __init__(self, window, startPos, GRID_SIZE, BLOCK_SIZE, foods):
         self.body = [ [ startPos[0],startPos[1] ], 
                       [startPos[0],startPos[1]], 
@@ -28,8 +29,8 @@ class Snake:
         self.PADDING = BLOCK_SIZE/10
         self.COLOR = (randint(100, 255),randint(100, 255),randint(100, 255))
         self.foods = foods
-        
         self.bot = Bot(self, self.foods[0])    
+        self.isAlive = True
 
     def draw(self):
         for bodypart in self.body:
@@ -51,6 +52,7 @@ class Snake:
         self.bot.set_food(self.foods[0])
 
         if head == self.foods[0].position:
+            self.eat()
             del self.foods[0]
             self.foods.append( Food(self.window, self.GRID_SIZE, self.BLOCK_SIZE) )
             self.bot.set_food(self.foods[0])
@@ -74,6 +76,13 @@ class Snake:
 
         # no collisions
         return False
+
+    def checkCollideWithSnake(self, otherSnake):
+        head = self.body[0]
+        if (head) in otherSnake.body:
+            return True
+        return False
+
     def act(self):
         botAction = self.bot.act()
         if botAction == UP:
