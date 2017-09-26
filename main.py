@@ -109,6 +109,9 @@ while not gameShouldClose:
     textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
     gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE))
 
+    #TODO:  KIVY SLIDER
+    # https://kivy.org/docs/api-kivy.uix.slider.html
+
     if(snake.body[0] == food.position):
         snake.eat(True)
         food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
