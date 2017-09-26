@@ -1,5 +1,6 @@
 from random import randint
 from math import sqrt
+import copy
 
 RIGHT = 0
 UP = 1
@@ -58,7 +59,7 @@ class Bot:
         return dist
 
     def calc_pos(self, dir):
-        temp_head = self.snake.body[0]
+        temp_head = copy.deepcopy(self.snake.body[0])
         #right
         if dir == 0:
             temp_head[0] = temp_head[0] + 1
@@ -82,17 +83,17 @@ class Bot:
         currDirr = self.snake.speed
 
         if currDirr == [1,0]: # Right
-            print("Curr dirr: RIGHT");
+            #print("Curr dirr: RIGHT");
             skipIndex = LEFT
         elif currDirr == [0,1]: # Up
             skipIndex = UP
-            print("Curr dirr: down");
+            #print("Curr dirr: down");
         elif currDirr == [-1, 0]: # Left
             skipIndex = RIGHT
-            print("Curr dirr: Left");
+            #print("Curr dirr: Left");
         elif currDirr == [0, -1]: # down
             skipIndex = DOWN
-            print("Curr dirr: up");
+            #print("Curr dirr: up");
 
 
         for i in range(4):     
