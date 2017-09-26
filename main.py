@@ -35,6 +35,7 @@ pygame.display.update()
 
 pygame.font.init() # you have to call this at the start, 
 
+highscore = 0;
 
 def init():
     global snake
@@ -105,13 +106,19 @@ while not gameShouldClose:
     snake.draw()
     food.draw()
 
+    # Update highscore
+    if snake.score > highscore:
+        highscore = snake.score
+
     # Draw UI
     pygame.draw.rect(gameDisplay, GRAY, [0 , GRID_SIZE[1]*BLOCK_SIZE, GRID_SIZE[0]*BLOCK_SIZE, UI_HEIGHT])
     
     textsurface = myfont.render("Score: " + str(snake.score), False, (255, 255, 0))
     gameDisplay.blit(textsurface,(0,GRID_SIZE[1]*BLOCK_SIZE))
+    textsurfaceHighscore = myfont.render("Highscore: " + str(highscore), False, (255, 255, 0))
+    gameDisplay.blit(textsurfaceHighscore,(7 * BLOCK_SIZE,GRID_SIZE[1]*BLOCK_SIZE))
     textsurfaceEpisodes = myfont.render("Episodes: " + str(episodes), False, (255,255,0))
-    gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE))
+    gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
     textsurfaceFPS = myfont.render("FPS: " + str(fps), False, (255,255,0))
     gameDisplay.blit(textsurfaceFPS, (0, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
 
