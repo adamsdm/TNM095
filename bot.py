@@ -1,6 +1,7 @@
 from random import randint
 from math import sqrt
 import copy
+import numpy as np
 
 RIGHT = 0
 UP = 1
@@ -23,15 +24,35 @@ class Bot:
         self.alpha = 0.1
         self.gamma = 0.5
         self.GRID_SIZE = GRID_SIZE
+        self.action = DOWN #old action, snake always goes down on first iteration
+        self.reward = np.matrix('100 0; 0 100')
+        self.features = [0.0]*3
+        self.state = 0
     
     def update(self, episodes):
         self.episodes = episodes
+    
+    def set_feature_vec(self):
+        temp_head = copy.deepcopy(self.snake.body[0])
+        if calc_dist(temp_head) < 5:
+            self.features[0] = True
+        self.features[1] = is_close_to_body()
+        self.features[2] = is_close_to_border()
+            
     
     def act(self):
         
         #is_close = self.is_close_to_body()
         is_closeBorder = self.is_close_to_border()
-        print(str(is_closeBorder))
+        if self.is_blocked_up():
+            print("blocked UP")
+        if self.is_blocked_down():
+            print("blocked DOWN")
+        if self.is_blocked_left():
+            print("blocked LEFT")
+        if self.is_blocked_right():
+            print("blocked RIGHT")
+        
         
         action = self.move_to_food()
 
@@ -113,7 +134,52 @@ class Bot:
         
         action = new_poses.index(min(new_poses))
         return action
+     
+    def is_blocked_up(self):
+       if self.snake.speed == [0,1]:
+           return False
+       
+       temp_head = copy.deepcopy(self.snake.body[0])
+       temp_head = [temp_head[0], temp_head[1] - 1]
+       for body_part in self.snake.body:
+           if temp_head == body_part:
+               return True
+       return False 
+    
+    def is_blocked_right(self):
+       if self.snake.speed == [-1,0]:
+           return False
         
+       temp_head = copy.deepcopy(self.snake.body[0])
+       temp_head = [temp_head[0] + 1, temp_head[1]]
+       for body_part in self.snake.body:
+           if temp_head == body_part:
+               return True
+       return False 
+    
+    def is_blocked_left(self):
+       if self.snake.speed == [1,0]:
+           return False 
+        
+       temp_head = copy.deepcopy(self.snake.body[0])
+       temp_head = [temp_head[0] - 1, temp_head[1]]
+       for body_part in self.snake.body:
+           if temp_head == body_part:
+               return True
+       return False 
+    
+    def is_blocked_down(self):
+       if self.snake.speed == [0,-1]:
+           return False
+       
+       temp_head = copy.deepcopy(self.snake.body[0])
+       temp_head = [temp_head[0], temp_head[1] + 1]
+       for body_part in self.snake.body:
+           if temp_head == body_part:
+               return True
+       return False 
+       
+    
     def is_close_to_body(self):
         proximity = [[0,0]]*5
         
@@ -152,7 +218,7 @@ class Bot:
         
     def is_close_to_border(self):
         temp_head = copy.deepcopy(self.snake.body[0])
-        print(temp_head)
+        
         if temp_head[0] == self.GRID_SIZE[0] - 1:
             return True
         elif temp_head[0] == 0:
@@ -163,7 +229,8 @@ class Bot:
             return True
         return False
         
-            
+    #def move_from_self():
+        
         
         
         

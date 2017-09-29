@@ -18,7 +18,7 @@ BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
-fps = 5
+fps = 1
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
