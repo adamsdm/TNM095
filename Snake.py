@@ -50,9 +50,8 @@ class Snake:
             return True
 
         # self collision
-        for bodypart in self.body[1:]:
-            if head == bodypart:
-               return True 
+        if head in self.body[1:]:
+            return True
 
         # no collisions
         return False
