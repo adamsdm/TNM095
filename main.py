@@ -21,6 +21,7 @@ BLOCK_SIZE = 14
 fps = 15
 FPSCLOCK = pygame.time.Clock()
 NUM_SNAKES = 10
+NUM_FOOD = 10
 
 # Dimension of grid
 GRID_SIZE = [71, 41]
@@ -43,14 +44,29 @@ def init():
     global deadSnakes
     global foods
     global bot1
-    foods = [Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)]
 
+    foods = []
     snakes = []
     deadSnakes = []
+    
+    for i in range(NUM_FOOD):
+        foods.append(Food(gameDisplay, GRID_SIZE, BLOCK_SIZE))
+
+    # Instanciate initial snake positions before creating snakes to ensure that snakes don't spawn on top of eachoter
+    
+    positions = []
+    for i in range(NUM_SNAKES):
+        pos = [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])]
+        # Create a new random pos untill we find one that's not already used
+        while pos in positions:
+            pos = [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])]
+        positions.append(pos)
+        
 
     for i in range(NUM_SNAKES):
+        pos = [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])]
         snakes.append( Snake(   gameDisplay, 
-                                [randint(0, GRID_SIZE[0]), randint(0, GRID_SIZE[1])], 
+                                pos, 
                                 GRID_SIZE, 
                                 BLOCK_SIZE, 
                                 foods
@@ -90,8 +106,8 @@ while not gameShouldClose:
 
     # For each snake
     for snake in snakes:
-        snake.act()
         snake.move()
+        snake.act()
         snake.draw()
 
         for otherSnake in list(snakes):
@@ -102,7 +118,14 @@ while not gameShouldClose:
 
 
     for food in foods:
-        food.draw()
+        if not food.isEaten:
+            food.draw()
+    
+    for food in list(foods):
+        if food.isEaten:
+            foods.remove(food)
+
+    # Remove eaten food
 
     # Update highscore
     if snakes[0].score > highscore:

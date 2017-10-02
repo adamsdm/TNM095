@@ -3,7 +3,7 @@ import math
 from random import randint
 from bot import Bot
 from food import Food
-
+from math import sqrt
 
 RIGHT = 0
 UP = 1
@@ -29,8 +29,30 @@ class Snake:
         self.PADDING = BLOCK_SIZE/10
         self.COLOR = (randint(100, 255),randint(100, 255),randint(100, 255))
         self.foods = foods
-        self.bot = Bot(self, self.foods[0])    
-        self.isAlive = True
+
+        # Find closest food
+        self.closest_food = self.findClosestFood()
+        self.bot = Bot(self, self.closest_food)    
+
+    def findClosestFood(self):
+        min_distance = float("inf")
+        closest_food = self.foods[0]
+
+        for i in range(len(self.foods)):
+            food = self.foods[i]
+            if(food.isEaten):
+                continue
+            head = self.body[0]
+            d_x = abs(food.position[0] - head[0])
+            d_y = abs(food.position[1] - head[1])
+            dist = sqrt(pow(d_x,2) + pow(d_y, 2))
+
+
+            if dist < min_distance :
+                min_distance = dist
+                closest_food = food
+
+        return closest_food
 
     def draw(self):
         for bodypart in self.body:
@@ -49,16 +71,19 @@ class Snake:
         self.body.insert(0, nextPos) # insert the new position
         del self.body[-1] # Remove the last position
 
-        self.bot.set_food(self.foods[0])
+        self.closest_food = self.findClosestFood()
+        self.bot.set_food(self.closest_food)
 
-        if head == self.foods[0].position:
-            self.eat()
-            del self.foods[0]
-            self.foods.append( Food(self.window, self.GRID_SIZE, self.BLOCK_SIZE) )
-            self.bot.set_food(self.foods[0])
-            
-    
-        
+        # Check if head on food 
+        for food in list(self.foods):
+            if head == food.position:
+                self.eat()
+                self.foods.remove(food)
+                self.foods.append( Food(self.window, self.GRID_SIZE, self.BLOCK_SIZE) )
+
+                self.closest_food = self.findClosestFood()
+                self.bot.set_food(self.closest_food)
+                
     
     def checkCollision(self):
         
