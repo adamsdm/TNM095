@@ -18,7 +18,7 @@ BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
-fps = 1
+fps = 10
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
@@ -117,9 +117,6 @@ while not gameShouldClose:
     gameDisplay.blit(textsurfaceEpisodes, (7 * BLOCK_SIZE, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
     textsurfaceFPS = myfont.render("FPS: " + str(fps), False, (255,255,0))
     gameDisplay.blit(textsurfaceFPS, (0, GRID_SIZE[1]*BLOCK_SIZE + BLOCK_SIZE))
-
-    #TODO:  KIVY SLIDER
-    # https://kivy.org/docs/api-kivy.uix.slider.html
 
     if(snake.body[0] == food.position):
         snake.eat(True)
