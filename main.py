@@ -58,11 +58,11 @@ while not gameShouldClose:
         if event.type == pygame.QUIT:
             gameShouldClose = True
         
-        if (event.type == pygame.KEYDOWN and (event.key == pygame.K_PLUS)):
+        if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
             fps += 5;
-        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_MINUS)):
+        elif (event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN)):
             fps -= 5;
-
+        fps = max(1, fps)
         
         # Handle movement
         # if (event.type == pygame.KEYDOWN and (event.key == pygame.K_UP)):
