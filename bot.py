@@ -73,6 +73,10 @@ class Bot:
     def get_best_action(self):
         curr_row = Q[self.state, :]
         column = curr_row.argmax(axis = 0)
+        indices = np.where(curr_row == curr_row.max())
+        index = randint(0,indices[0].size - 1)
+        #print(index)
+        column = indices[0][index]
         return column
     
     def act(self):
@@ -86,12 +90,10 @@ class Bot:
         self.state = self.determine_state()
         self.action = self.get_best_action()
         
-        print("best action = " + str(self.action))
+        #print("best action = " + str(self.action))
 
         if self.action == 4:
             self.action = self.move_to_food()
-
-        print("state = " + str(self.state))
 
         #right
         if self.action == 0:
