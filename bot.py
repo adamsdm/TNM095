@@ -24,37 +24,49 @@ class Bot:
         self.alpha = 0.1
         self.gamma = 0.5
         self.GRID_SIZE = GRID_SIZE
-        self.action = DOWN #old action, snake always goes down on first iteration
-        self.reward = np.matrix('100 0; 0 100')
-        self.features = [0.0]*3
-        self.state = 0
+        self.action = DOWN 
+        self.reward = np.matrix('0 0 0 0; 0 -100 0 0;\
+            0 0 0 -100; 0 -100 0 -100; -100 0 0 0;\
+            -100 -100 0 0; -100 0 0 -100; -100 -100 0 -100;\
+            0 0 -100 0; 0 -100 -100 0; 0 0 -100 -100;\
+            0 -100 -100 -100; -100 0 -100 0; -100 -100 -100 0;\
+            -100 0 -100 -100; -100 -100 -100 -100') 
+        self.features = [False]*4
+        self.state = 0 #state can be 0 - 7
+        self.Q = np.zeros(shape=(16,4))
+
+        #print(str(self.reward))
     
-    def update(self, episodes):
+    def set_episodes(self, episodes):
         self.episodes = episodes
     
     def set_feature_vec(self):
         temp_head = copy.deepcopy(self.snake.body[0])
-        if calc_dist(temp_head) < 5:
-            self.features[0] = True
-        self.features[1] = is_close_to_body()
-        self.features[2] = is_close_to_border()
-            
+        
+        self.features[0] = self.is_blocked_up()
+        self.features[1] = self.is_blocked_down()
+        self.features[2] = self.is_blocked_right()
+        self.features[3] = self.is_blocked_left()
+    
+    def determine_state(self):
+        up = self.features[0]
+        down = self.features[1]
+        right = self.features[2]
+        left = self.features[3]
+
+        self.state = 0
+        self.state = up*1 + down*2 + right*4 + left*8
+
     
     def act(self):
         
         #is_close = self.is_close_to_body()
         is_closeBorder = self.is_close_to_border()
-        if self.is_blocked_up():
-            print("blocked UP")
-        if self.is_blocked_down():
-            print("blocked DOWN")
-        if self.is_blocked_left():
-            print("blocked LEFT")
-        if self.is_blocked_right():
-            print("blocked RIGHT")
-        
         
         action = self.move_to_food()
+        self.set_feature_vec()
+        self.determine_state()
+
 
         #right
         if action == 0:
@@ -141,6 +153,9 @@ class Bot:
        
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0], temp_head[1] - 1]
+       # border condition
+       if temp_head[1] == 0:
+            return True 
        for body_part in self.snake.body:
            if temp_head == body_part:
                return True
@@ -152,6 +167,9 @@ class Bot:
         
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0] + 1, temp_head[1]]
+       #border condition
+       if temp_head[0] == self.GRID_SIZE[0]:
+            return True
        for body_part in self.snake.body:
            if temp_head == body_part:
                return True
@@ -159,10 +177,15 @@ class Bot:
     
     def is_blocked_left(self):
        if self.snake.speed == [1,0]:
-           return False 
+           return False
         
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0] - 1, temp_head[1]]
+
+       #border condition
+       if temp_head[0] == 0:
+            return True
+
        for body_part in self.snake.body:
            if temp_head == body_part:
                return True
@@ -174,6 +197,9 @@ class Bot:
        
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0], temp_head[1] + 1]
+       #border condition
+       if temp_head[1] == self.GRID_SIZE[1]:
+            return True
        for body_part in self.snake.body:
            if temp_head == body_part:
                return True

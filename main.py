@@ -18,7 +18,7 @@ BLACK = (0,0,0)
 GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
-fps = 1
+fps = 5
 FPSCLOCK = pygame.time.Clock()
 
 # Dimension of grid
@@ -131,7 +131,7 @@ while not gameShouldClose:
     # Restart game if ded
     if(snake.checkCollision()):
         episodes += 1
-        bot.update(episodes)
+        bot.set_episodes(episodes)
         init()
         
     FPSCLOCK.tick(fps)
