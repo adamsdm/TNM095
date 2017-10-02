@@ -21,6 +21,8 @@ class Snake:
                       [startPos[0],startPos[1]],
                       [startPos[0],startPos[1]]
                     ]
+
+
         self.window = window
         self.speed = [0,1]
         self.score = 0

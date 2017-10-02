@@ -106,9 +106,10 @@ while not gameShouldClose:
 
     # For each snake
     for snake in snakes:
-        snake.move()
         snake.act()
+        snake.move()
         snake.draw()
+
 
         for otherSnake in list(snakes):
             if ( otherSnake != snake and snake.checkCollideWithSnake(otherSnake) ):
@@ -147,7 +148,6 @@ while not gameShouldClose:
     for i in range(len(deadSnakes)):
         textsurfaceDead = myfont.render("Score: " + str(deadSnakes[i].score), False, deadSnakes[i].COLOR)
         gameDisplay.blit(textsurfaceDead,(GRID_SIZE[0]*BLOCK_SIZE + PADDING, GRID_SIZE[1]*BLOCK_SIZE/2 + i*18))
-
 
         
     FPSCLOCK.tick(fps)

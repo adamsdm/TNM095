@@ -15,6 +15,11 @@ class Bot:
             variables:
             alpha: learning rate, high values consider recent event more
             gamma: discount factor, low value will yield a greedy snake whilst high values makes it consider long term rewards more
+
+            Actions:
+                A1: Flee from snake
+                A2: Go to food
+
         """
         self.snake = snake
         self.episodes = 0
