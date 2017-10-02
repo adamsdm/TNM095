@@ -19,7 +19,7 @@ GREEN = (0,255,0)
 # Size of one bodypart (i.e one gridpoint width/height)
 BLOCK_SIZE = 20 
 
-fps = 5
+fps = 10
 
 FPSCLOCK = pygame.time.Clock()
 
@@ -103,6 +103,9 @@ while not gameShouldClose:
     snake.move()
     snake.draw()
     food.draw()
+
+    bot.set_feature_vec()
+    bot.state = bot.determine_state()
     bot.update_Q(bot.old_state, bot.action, bot.state)
 
 

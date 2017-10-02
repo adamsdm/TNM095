@@ -7,6 +7,7 @@ RIGHT = 0
 UP = 1
 LEFT = 2
 DOWN = 3
+Q = np.zeros(shape=(16,4))
 
 class Bot:
     def __init__(self,
@@ -34,7 +35,9 @@ class Bot:
         self.features = [False]*4
         self.old_state = None
         self.state = 0 #state can be 0 - 7
-        self.Q = np.zeros(shape=(16,4))
+        
+        print(Q)
+        print("\n\n")
 
         #print(str(self.reward))
     
@@ -60,15 +63,15 @@ class Bot:
         return state
 
     def update_Q(self, state, action, next_state):
-        Qmax = max(self.Q[next_state, :])
+        Qmax = max(Q[next_state, :])
 
         # Q-learning algorithm
-        print(self.reward.item(state, action))
-        self.Q[state, action] = (1 - self.alpha) * self.Q.item(state, action) + self.alpha * (self.reward.item(state, action) + self.gamma * Qmax)
-
+        Q[state, action] = (1 - self.alpha) * Q.item(state, action) + self.alpha * (self.reward.item(state, action) + self.gamma * Qmax)
+        
+        
 
     def get_best_action(self):
-        curr_row = self.Q[self.state, :]
+        curr_row = Q[self.state, :]
         column = curr_row.argmax(axis = 0)
         return column
     
