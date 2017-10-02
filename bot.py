@@ -63,15 +63,21 @@ class Bot:
         # Q-learning algorithm
         self.Q[state, action] = (1 - self.alpha) * self.Q.item(state, action) + alpha * (self.reward.item(state, action) + self.gamma * Qmax)
         
+    def get_best_action(self):
+        curr_row = self.Q[self.state, :]
+        column = curr_row.argmax(axis = 0)
+        return column
     
     def act(self):
         
         #is_close = self.is_close_to_body()
-        is_closeBorder = self.is_close_to_border()
+        #is_closeBorder = self.is_close_to_border()
         
-        action = self.move_to_food()
+        #action = self.move_to_food()
         self.set_feature_vec()
         self.determine_state()
+        self.action = self.get_best_action()
+        self.update_Q(self.state, self.action, )
 
 
         #right
