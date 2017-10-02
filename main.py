@@ -103,6 +103,8 @@ while not gameShouldClose:
     snake.move()
     snake.draw()
     food.draw()
+    bot.update_Q(bot.old_state, bot.action, bot.state)
+
 
     # Update highscore
     if snake.score > highscore:

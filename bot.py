@@ -26,12 +26,13 @@ class Bot:
         self.GRID_SIZE = GRID_SIZE
         self.action = DOWN 
         self.reward = np.matrix('0 0 0 0; 0 -100 0 0;\
-            0 0 0 -100; 0 -100 0 -100; -100 0 0 0;\
+            0 0 0 -100; -100 -100 0 -100; -100 0 0 0;\
             -100 -100 0 0; -100 0 0 -100; -100 -100 0 -100;\
             0 0 -100 0; 0 -100 -100 0; 0 0 -100 -100;\
             0 -100 -100 -100; -100 0 -100 0; -100 -100 -100 0;\
             -100 0 -100 -100; -100 -100 -100 -100') 
         self.features = [False]*4
+        self.old_state = None
         self.state = 0 #state can be 0 - 7
         self.Q = np.zeros(shape=(16,4))
 
@@ -54,15 +55,18 @@ class Bot:
         right = self.features[2]
         left = self.features[3]
 
-        self.state = 0
-        self.state = up*1 + down*2 + right*4 + left*8
+        state = 0
+        state = up*1 + down*2 + right*4 + left*8
+        return state
 
     def update_Q(self, state, action, next_state):
         Qmax = max(self.Q[next_state, :])
 
         # Q-learning algorithm
-        self.Q[state, action] = (1 - self.alpha) * self.Q.item(state, action) + alpha * (self.reward.item(state, action) + self.gamma * Qmax)
-        
+        print(self.reward.item(state, action))
+        self.Q[state, action] = (1 - self.alpha) * self.Q.item(state, action) + self.alpha * (self.reward.item(state, action) + self.gamma * Qmax)
+
+
     def get_best_action(self):
         curr_row = self.Q[self.state, :]
         column = curr_row.argmax(axis = 0)
@@ -75,22 +79,23 @@ class Bot:
         
         #action = self.move_to_food()
         self.set_feature_vec()
-        self.determine_state()
+        self.old_state = self.state
+        self.state = self.determine_state()
         self.action = self.get_best_action()
-        self.update_Q(self.state, self.action, )
+        
 
 
         #right
-        if action == 0:
+        if self.action == 0:
             return RIGHT
         #up
-        elif action == 1:
+        elif self.action == 1:
             return UP
         #left
-        elif action == 2:
+        elif self.action == 2:
             return LEFT
         #down
-        elif action == 3:
+        elif self.action == 3:
             return DOWN
 
     def calc_manhattan_dist(self, head):
