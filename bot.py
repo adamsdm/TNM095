@@ -7,7 +7,7 @@ RIGHT = 0
 UP = 1
 LEFT = 2
 DOWN = 3
-Q = np.zeros(shape=(16,4))
+Q = np.zeros(shape=(16,5))
 
 class Bot:
     def __init__(self,
@@ -22,22 +22,22 @@ class Bot:
         self.snake = snake
         self.episodes = 0
         self.food = food
-        self.alpha = 0.1
+        self.alpha = 0.5
         self.gamma = 0.5
         self.GRID_SIZE = GRID_SIZE
         self.action = DOWN 
-        self.reward = np.matrix('0 0 0 0; 0 -100 0 0;\
-            0 0 0 -100; -100 -100 0 -100; -100 0 0 0;\
-            -100 -100 0 0; -100 0 0 -100; -100 -100 0 -100;\
-            0 0 -100 0; 0 -100 -100 0; 0 0 -100 -100;\
-            0 -100 -100 -100; -100 0 -100 0; -100 -100 -100 0;\
-            -100 0 -100 -100; -100 -100 -100 -100') 
+        self.reward = np.matrix('0 0 0 0 100; 0 -100 0 0 100;\
+            0 0 0 -100 100; -100 -100 0 -100 100; -100 0 0 0 100;\
+            -100 -100 0 0 100; -100 0 0 -100 100; -100 -100 0 -100 100;\
+            0 0 -100 0 100; 0 -100 -100 0 100; 0 0 -100 -100 100;\
+            0 -100 -100 -100 100; -100 0 -100 0 100; -100 -100 -100 0 100;\
+            -100 0 -100 -100 100; -100 -100 -100 -100 100') 
         self.features = [False]*4
-        self.old_state = None
-        self.state = 0 #state can be 0 - 7
+        self.old_state = 0
+        self.state = 0 #state can be 0 - 15
         
-        print(Q)
-        print("\n\n")
+        # print(Q)
+        # print("\n\n")
 
         #print(str(self.reward))
     
@@ -86,7 +86,12 @@ class Bot:
         self.state = self.determine_state()
         self.action = self.get_best_action()
         
+        print("best action = " + str(self.action))
 
+        if self.action == 4:
+            self.action = self.move_to_food()
+
+        print("state = " + str(self.state))
 
         #right
         if self.action == 0:
@@ -169,12 +174,12 @@ class Bot:
      
     def is_blocked_up(self):
        if self.snake.speed == [0,1]:
-           return False
+           return True
        
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0], temp_head[1] - 1]
        # border condition
-       if temp_head[1] == 0:
+       if temp_head[1] < 0:
             return True 
        for body_part in self.snake.body:
            if temp_head == body_part:
@@ -183,12 +188,12 @@ class Bot:
     
     def is_blocked_right(self):
        if self.snake.speed == [-1,0]:
-           return False
+           return True
         
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0] + 1, temp_head[1]]
        #border condition
-       if temp_head[0] == self.GRID_SIZE[0]:
+       if temp_head[0] == self.GRID_SIZE[0] :
             return True
        for body_part in self.snake.body:
            if temp_head == body_part:
@@ -197,13 +202,13 @@ class Bot:
     
     def is_blocked_left(self):
        if self.snake.speed == [1,0]:
-           return False
+           return True
         
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0] - 1, temp_head[1]]
 
        #border condition
-       if temp_head[0] == 0:
+       if temp_head[0] < 0:
             return True
 
        for body_part in self.snake.body:
@@ -213,7 +218,7 @@ class Bot:
     
     def is_blocked_down(self):
        if self.snake.speed == [0,-1]:
-           return False
+           return True
        
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0], temp_head[1] + 1]
