@@ -57,6 +57,12 @@ class Bot:
         self.state = 0
         self.state = up*1 + down*2 + right*4 + left*8
 
+    def update_Q(self, state, action, next_state):
+        Qmax = max(self.Q[next_state, :])
+
+        # Q-learning algorithm
+        self.Q[state, action] = (1 - self.alpha) * self.Q.item(state, action) + alpha * (self.reward.item(state, action) + self.gamma * Qmax)
+        
     
     def act(self):
         
