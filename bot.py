@@ -1,4 +1,4 @@
-from random import randint
+import random
 from math import sqrt
 import copy
 import numpy as np
@@ -7,7 +7,11 @@ RIGHT = 0
 UP = 1
 LEFT = 2
 DOWN = 3
-Q = np.zeros(shape=(16,5))
+
+Q = np.random.rand(16,5)
+Q = np.multiply(Q, 100)
+
+
 
 class Bot:
     def __init__(self,
@@ -20,9 +24,8 @@ class Bot:
             gamma: discount factor, low value will yield a greedy snake whilst high values makes it consider long term rewards more
         """
         self.snake = snake
-        self.episodes = 0
         self.food = food
-        self.alpha = 0.3
+        self.alpha = 0.7
         self.gamma = 0.4
         self.GRID_SIZE = GRID_SIZE
         self.action = DOWN 
@@ -35,14 +38,18 @@ class Bot:
         self.features = [False]*4
         self.old_state = 0
         self.state = 0 #state can be 0 - 15
-        
-        print(Q)
+        self.episodes = 0
+
+        print("Q: ", Q)
+        #print("alpha: ", self.alpha)
+        print(self.episodes)
         print("\n\n")
+
 
         #print(str(self.reward))
     
-    def set_episodes(self, episodes):
-        self.episodes = episodes
+    def set_episodes(self, _episodes):
+        self.episodes = _episodes
     
     def set_feature_vec(self):
         temp_head = copy.deepcopy(self.snake.body[0])
@@ -64,8 +71,8 @@ class Bot:
 
     def update_Q(self, state, action, next_state):
         # fix this shite need to be same action/state as picked next
-        Qmax = max(Q[next_state, :])
-        print("qmax = " + str(Qmax))
+        Qmax = Q[next_state, :].max()
+        #print("qmax = " + str(Qmax))
 
         # Q-learning algorithm
         Q[state, action] = (1 - self.alpha) * Q.item(state, action) + self.alpha * (self.reward.item(state, action) + self.gamma * Qmax)
@@ -74,12 +81,14 @@ class Bot:
 
     def get_best_action(self):
         curr_row = Q[self.state, :]
-        column = curr_row.argmax(axis = 0)
-        indices = np.where(curr_row == curr_row.max())
-        index = randint(0,indices[0].size - 1)
-        #print(index)
-        column = indices[0][index]
-        return column
+        best_action = curr_row.argmax(axis = 0)
+        # print(column)
+        # indices = np.where(curr_row == curr_row.max())
+        # index = randint(0,indices[0].size - 1)
+        # #print(index)
+        # column = indices[0][index]
+
+        return best_action
     
     def act(self):
         
@@ -95,7 +104,19 @@ class Bot:
         #print("best action = " + str(self.action))
 
         if self.action == 4:
-            self.action = self.move_to_food()
+            food_action = self.move_to_food()
+            #right
+            if food_action == 0:
+                return RIGHT
+            #up
+            elif food_action == 1:
+                return UP
+            #left
+            elif food_action == 2:
+                return LEFT
+            #down
+            elif food_action == 3:
+                return DOWN    
 
         #right
         if self.action == 0:
@@ -150,7 +171,7 @@ class Bot:
 
         currDirr = self.snake.speed
 
-        if currDirr == [1,0]: # Right
+        if currDirr == [1,0]: # Righti
             #print("Curr dirr: RIGHT");
             skipIndex = LEFT
         elif currDirr == [0,1]: # Up
