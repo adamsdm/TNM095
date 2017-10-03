@@ -8,8 +8,9 @@ UP = 1
 LEFT = 2
 DOWN = 3
 
-Q = np.random.rand(16,5)
+Q = np.random.rand(64,5)
 Q = np.multiply(Q, 100)
+print(Q)
 
 
 
@@ -26,23 +27,40 @@ class Bot:
         self.snake = snake
         self.food = food
         self.alpha = 0.7
-        self.gamma = 0.4
+        self.gamma = 0.6
         self.GRID_SIZE = GRID_SIZE
         self.action = DOWN 
-        self.reward = np.matrix('0 0 0 0 50; 0 -100 0 0 50;\
-            0 0 0 -100 50; -100 -100 0 -100 50; -100 0 0 0 50;\
-            -100 -100 0 0 50; -100 0 0 -100 50; -100 -100 0 -100 50;\
-            0 0 -100 0 50; 0 -100 -100 0 50; 0 0 -100 -100 50;\
-            0 -100 -100 -100 50; -100 0 -100 0 50; -100 -100 -100 0 50;\
-            -100 0 -100 -100 50; -100 -100 -100 -100 50') 
-        self.features = [False]*4
+        self.reward = np.matrix('0 0 0 -200 100; 10 -100 10 -200 0;\
+            10 10 10 -1000 0; 10 -1000 50 -1000 0; -1000 10 10 -200 0;\
+            -1000 -1000 10 -200 0; -1000 10 10 -1000 0; -1000 -1000 50 -1000 0;\
+            10 10 -1000 -200 0; 10 -1000 -1000 -200 0; 10 10 -1000 -1000 0;\
+            10 -1000 -1000 -1000 0; -1000 50 -1000 -200 0; -1000 -1000 -1000 -200 0;\
+            -1000 50 -1000 -1000 0; -1000 -1000 -1000 -1000 0;\
+            0 -200 0 0 100; 10 -100 10 10 0;\
+            10 -200 10 -1000 0; 10 -1000 50 -1000 0; -1000 -200 10 10 0;\
+            -1000 -1000 10 10 0; -1000 -200 10 -1000 0; -1000 -1000 50 -1000 0;\
+            10 -200 -1000 10 0; 10 -1000 -1000 10 0; 10 -200 -1000 -1000 0;\
+            10 -1000 -1000 -1000 0; -1000 -200 -1000 50 0; -1000 -1000 -1000 50 0;\
+            -1000 -200 -1000 -1000 0; -1000 -1000 -1000 -1000 0;\
+            -200 0 0 0 100; -200 -100 10 10 0;\
+            -200 10 10 -1000 0; 10 -1000 50 -1000 0; -1000 10 10 10 0;\
+            -1000 -1000 10 10 0; -1000 10 10 -1000 0; -1000 -1000 50 -1000 0;\
+            -200 10 -1000 10 0; -200 -1000 -1000 10 0; -200 10 -1000 -1000 0;\
+            -200 -1000 -1000 -1000 0; -1000 50 -1000 50 0; -1000 -1000 -1000 50 0;\
+            -1000 50 -1000 -1000 0; -1000 -1000 -1000 -1000 0;\
+            0 0 -200 0 100; 10 -100 -200 10 0;\
+            10 10 -200 -1000 0; -1000 -1000 -200 -1000 0; -1000 10 -200 10 0;\
+            -1000 -1000 -200 10 0; -1000 10 -200 -1000 0; -1000 -1000 -200 -1000 0;\
+            10 10 -1000 10 0; 10 -1000 -1000 10 0; 10 10 -1000 -1000 0;\
+            10 -1000 -1000 -1000 0; -1000 50 -1000 50 0; -1000 -1000 -1000 50 0;\
+            -1000 50 -1000 -1000 0; -1000 -1000 -1000 -1000 0') 
+        self.features = [False]*8
         self.old_state = 0
         self.state = 0 #state can be 0 - 15
         self.episodes = 0
 
-        print("Q: ", Q)
+        #print("Q: ", Q)
         #print("alpha: ", self.alpha)
-        print(self.episodes)
         print("\n\n")
 
 
@@ -58,19 +76,42 @@ class Bot:
         self.features[1] = self.is_blocked_down()
         self.features[2] = self.is_blocked_right()
         self.features[3] = self.is_blocked_left()
+        
+        self.features[4] = False
+        self.features[5] = False
+        self.features[6] = False
+        self.features[7] = False
+        
+        # dir = up
+        if self.snake.speed == [0,-1]:
+            self.features[4] = True
+        # dir = down
+        elif self.snake.speed == [0,1]:
+            self.features[5] = True
+        # dir = left
+        elif self.snake.speed == [-1,0]:
+            self.features[6] = True
+        #dir = right
+        elif self.snake.speed == [1,0]:
+            self.features[7] = True
+        
     
     def determine_state(self):
         up = self.features[0]
         down = self.features[1]
         right = self.features[2]
         left = self.features[3]
+        speed_up = self.features[4]
+        speed_down = self.features[5]
+        speed_left = self.features[6]
+        speed_right = self.features[7]
+        
 
         state = 0
-        state = up*1 + down*2 + right*4 + left*8
+        state = up*1 + down*2 + right*4 + left*8 + 16*speed_down + 32*speed_left + 48*speed_right
         return state
 
     def update_Q(self, state, action, next_state):
-        # fix this shite need to be same action/state as picked next
         Qmax = Q[next_state, :].max()
         #print("qmax = " + str(Qmax))
 
@@ -199,7 +240,7 @@ class Bot:
      
     def is_blocked_up(self):
        if self.snake.speed == [0,1]:
-           return True
+           return False
        
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0], temp_head[1] - 1]
@@ -213,7 +254,7 @@ class Bot:
     
     def is_blocked_right(self):
        if self.snake.speed == [-1,0]:
-           return True
+           return False
         
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0] + 1, temp_head[1]]
@@ -227,7 +268,7 @@ class Bot:
     
     def is_blocked_left(self):
        if self.snake.speed == [1,0]:
-           return True
+           return False
         
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0] - 1, temp_head[1]]
@@ -243,7 +284,7 @@ class Bot:
     
     def is_blocked_down(self):
        if self.snake.speed == [0,-1]:
-           return True
+           return False
        
        temp_head = copy.deepcopy(self.snake.body[0])
        temp_head = [temp_head[0], temp_head[1] + 1]
