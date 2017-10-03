@@ -22,22 +22,22 @@ class Bot:
         self.snake = snake
         self.episodes = 0
         self.food = food
-        self.alpha = 0.5
-        self.gamma = 0.5
+        self.alpha = 0.3
+        self.gamma = 0.4
         self.GRID_SIZE = GRID_SIZE
         self.action = DOWN 
-        self.reward = np.matrix('0 0 0 0 100; 0 -100 0 0 100;\
-            0 0 0 -100 100; -100 -100 0 -100 100; -100 0 0 0 100;\
-            -100 -100 0 0 100; -100 0 0 -100 100; -100 -100 0 -100 100;\
-            0 0 -100 0 100; 0 -100 -100 0 100; 0 0 -100 -100 100;\
-            0 -100 -100 -100 100; -100 0 -100 0 100; -100 -100 -100 0 100;\
-            -100 0 -100 -100 100; -100 -100 -100 -100 100') 
+        self.reward = np.matrix('0 0 0 0 50; 0 -100 0 0 50;\
+            0 0 0 -100 50; -100 -100 0 -100 50; -100 0 0 0 50;\
+            -100 -100 0 0 50; -100 0 0 -100 50; -100 -100 0 -100 50;\
+            0 0 -100 0 50; 0 -100 -100 0 50; 0 0 -100 -100 50;\
+            0 -100 -100 -100 50; -100 0 -100 0 50; -100 -100 -100 0 50;\
+            -100 0 -100 -100 50; -100 -100 -100 -100 50') 
         self.features = [False]*4
         self.old_state = 0
         self.state = 0 #state can be 0 - 15
         
-        # print(Q)
-        # print("\n\n")
+        print(Q)
+        print("\n\n")
 
         #print(str(self.reward))
     
@@ -63,7 +63,9 @@ class Bot:
         return state
 
     def update_Q(self, state, action, next_state):
+        # fix this shite need to be same action/state as picked next
         Qmax = max(Q[next_state, :])
+        print("qmax = " + str(Qmax))
 
         # Q-learning algorithm
         Q[state, action] = (1 - self.alpha) * Q.item(state, action) + self.alpha * (self.reward.item(state, action) + self.gamma * Qmax)

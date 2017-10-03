@@ -137,8 +137,6 @@ while not gameShouldClose:
         episodes += 1
         bot.set_episodes(episodes)
         init()
-    
-    
 
     FPSCLOCK.tick(fps)
     pygame.display.update()
