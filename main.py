@@ -45,6 +45,10 @@ def init():
     global bot
     snake = Snake(gameDisplay, GRID_SIZE, BLOCK_SIZE)
     food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
+    
+    while food.position not in snake.body:
+        food = Food(gameDisplay, GRID_SIZE, BLOCK_SIZE)
+
     bot = Bot(snake, food, GRID_SIZE)    
 
 
