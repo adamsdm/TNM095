@@ -10,6 +10,7 @@ DOWN = 3
 
 Q = np.random.rand(64,5)
 Q = np.multiply(Q, 100)
+
 print(Q)
 
 
